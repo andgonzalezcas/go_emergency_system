@@ -14,7 +14,6 @@ services:
       context: ./receiver
     depends_on:
       - queue
-      - mailhog
     environment:
       QUEUE_HOST: queue
       QUEUE_USER: guest
@@ -23,16 +22,8 @@ services:
       SMTP_HOST: smtp.gmail.com
       SMTP_PORT: 587
       SMTP_USERNAME: testgocami@gmail.com
-      SMTP_PASSWORD: ...............
-      TARGET_EMAIL: andgonzalezcas@gmail.com
-
-  mailhog:
-    image: mailhog/mailhog
-    logging:
-      driver: 'none'
-    ports:
-      - "8025:8025"
-      - "1025:1025"
+      SMTP_PASSWORD: ..............
+      TARGET_EMAIL: andgonzalezcas@unal.edu.co
 
   nginx:
     build: 
