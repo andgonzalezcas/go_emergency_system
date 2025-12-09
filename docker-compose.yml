@@ -1,0 +1,44 @@
+services:
+  queue:
+    image: 'rabbitmq:3-management' 
+    hostname: 'rabbitmq'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  receiver:
+    build: 
+      context: ./receiver
+    depends_on:
+      - queue
+      - mailhog
+    environment:
+      QUEUE_HOST: queue
+      QUEUE_USER: guest
+      QUEUE_PASS: guest
+      CONCURRENCY_LIMIT: 10
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_USERNAME: testgocami@gmail.com
+      SMTP_PASSWORD: ...............
+      TARGET_EMAIL: andgonzalezcas@gmail.com
+
+  mailhog:
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+  nginx:
+    build: 
+      context: ./gateway
+    container_name: nginx-gateway
+    ports:
+      - '8080:80' 
+    depends_on:
+      - receiver
